@@ -84,7 +84,7 @@ const generateTitleLinks = function(customSelector = "") {
   //       }
   //     }
   //   }
-  const links = document.querySelectorAll(".titles a");
+  const links = document.querySelectorAll(".titles li a");
 
   for (let link of links) {
     link.addEventListener("click", titleClickHandler);
@@ -115,9 +115,7 @@ function generateTags() {
   /* START LOOP: for every article: */
   for (let article of articles) {
     /* find tags wrapper */
-    let tagsWrapper = document.querySelector(
-      ".post-tags .list.list-horizontal"
-    );
+    let tagsWrapper = article.querySelector(".post-tags .list.list-horizontal");
     /* make html variable with empty string */
     let html = "";
     /* get tags from data-tags attribute and split tags into array */
@@ -138,3 +136,57 @@ function generateTags() {
 }
 
 generateTags();
+
+function tagClickHandler(customSelector = "") {
+  event.preventDefault();
+  console.log("Kliknięty: " + customSelector);
+  const posts = document.querySelectorAll(".post");
+
+  let html = "";
+  for (let post of posts) {
+    const tags = post.getAttribute("data-tags").split(" ");
+    for (let tag of tags) {
+      if (customSelector == tag) {
+        const element =
+          "<li><a href='#" +
+          post.getAttribute("id") +
+          "'>" +
+          post.querySelector(".post-title").innerText +
+          "</a></li>";
+        console.log(element);
+        html += element;
+      }
+    }
+    document.querySelector(".list.titles").innerHTML = html;
+    const links = document.querySelectorAll(".titles li a");
+
+    for (let link of links) {
+      link.addEventListener("click", titleClickHandler);
+    }
+  }
+
+  // document.querySelector(".list.titles").innerHTML = html;
+  // const links = document.querySelectorAll(".titles a");
+
+  // for (let link of links) {
+  //   link.addEventListener("click", titleClickHandler);
+  // }
+}
+const tags = document.querySelectorAll(".list.tags > li > a");
+for (let tag of tags) {
+  tag.addEventListener("click", function() {
+    tagClickHandler(this.innerText);
+    document.querySelector("button").classList.remove("button--hide");
+    // console.log(this, this.innerHTML);
+    event.preventDefault();
+  });
+}
+const postTags = document.querySelectorAll(".list.list-horizontal > li > a ");
+for (let postTag of postTags) {
+  postTag.addEventListener("click", function() {
+    tagClickHandler(this.innerText);
+    document.querySelector("button").classList.remove("button--hide");
+    // console.log(this, this.innerHTML);
+    event.preventDefault();
+  });
+}
