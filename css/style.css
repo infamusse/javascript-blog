@@ -134,4 +134,17 @@ body {
 .post-tags p {
   margin: 0 10px 0 0;
 }
+
+/*Tags*/
+.list.tags .tag-size-big {
+  font-size: 25px;
+}
+
+.list.tags .tag-size-medium {
+  font-size: 15px;
+}
+
+.list.tags .tag-size-small {
+  font-size: 5px;
+}
 /*# sourceMappingURL=style.css.map */
