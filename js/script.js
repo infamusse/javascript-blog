@@ -1,4 +1,15 @@
 "use strict";
+const templates = {
+  articleLink: Handlebars.compile(
+    document.querySelector("#template-article-link").innerHTML
+  ),
+  dataCloud: Handlebars.compile(
+    document.querySelector("#template-tags-cloud").innerHTML
+  ),
+  tagsPost: Handlebars.compile(
+    document.querySelector("#template-tags-post").innerHTML
+  )
+};
 
 const titleClickHandler = function(event) {
   event.preventDefault();
@@ -21,13 +32,12 @@ const titleClickHandler = function(event) {
 const createPostLinks = posts => {
   let html = "";
   for (let post of posts) {
-    const element =
-      "<li><a href=#" +
-      post.getAttribute("id") +
-      ">" +
-      post.querySelector(".post-title").innerText +
-      "</li></a>";
-    html += element;
+    const linkHTMLData = {
+      id: post.getAttribute("id"),
+      title: post.querySelector(".post-title").innerText
+    };
+    html += templates.articleLink(linkHTMLData);
+    console.log(linkHTMLData);
   }
   document.querySelector(".list.titles").innerHTML = html;
 };
@@ -95,33 +105,28 @@ function generateTags() {
   const articles = document.querySelectorAll(".post");
   for (let article of articles) {
     let tagsWrapper = article.querySelector(".post-tags .list.list-horizontal");
-    let html = "";
     const tags = article.getAttribute("data-tags").split(" ");
     for (let tag of tags) {
-      const element = "<li><a href='#data-" + tag + "'>" + tag + "</a></li>";
-      html += element;
       if (!allTags.hasOwnProperty(tag)) {
         allTags[tag] = 1;
       } else {
         allTags[tag]++;
       }
     }
-    tagsWrapper.innerHTML = html;
     const tagParams = calculateTagParams(allTags);
-    console.log("tagParams", tagParams);
-    let allTagsHTML = "";
+    let allTagsData = { tags: [] };
     for (let tag in allTags) {
-      const tagLinkHTML =
-        "<li><a href='#'class='" +
-        optCloudClassPrefix +
-        calculateTagClass(allTags[tag], tagParams) +
-        "'>" +
-        tag +
-        "</a><li>";
-      allTagsHTML += tagLinkHTML;
+      allTagsData.tags.push({
+        classPrefix: optCloudClassPrefix,
+        class: calculateTagClass(allTags[tag], tagParams),
+        tagName: tag
+      });
+      // allTagsData += templates.dataCloud(allTagsData);
+      console.log("allTagsData", allTagsData);
     }
     const tagList = document.querySelector(".tags");
-    tagList.innerHTML = allTagsHTML;
+    tagsWrapper.innerHTML = templates.tagsPost(allTagsData);
+    tagList.innerHTML = templates.dataCloud(allTagsData);
   }
 }
 
