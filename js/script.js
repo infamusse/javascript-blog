@@ -11,19 +11,19 @@ const templates = {
   )
 };
 
-const titleClickHandler = function(event) {
+const titleClickHandler = event => {
   event.preventDefault();
   const activeLinks = document.querySelectorAll(".titles a.active");
   for (let activeLink of activeLinks) {
     activeLink.classList.remove("active");
   }
-  this.classList.add("active");
+  event.target.classList.add("active");
   const activeArticles = document.querySelectorAll(".posts article.active");
   for (let activeArticle of activeArticles) {
     activeArticle.classList.remove("active");
   }
 
-  let attribute = this.getAttribute("href");
+  let attribute = event.target.getAttribute("href");
   let activeArticle = document.querySelector(attribute);
 
   activeArticle.classList.add("active");
@@ -73,7 +73,7 @@ document.querySelector("button").addEventListener("click", function() {
   document.querySelector("button").classList.add("button--hide");
 });
 
-function calculateTagParams(tags) {
+const calculateTagParams = tags => {
   const params = {
     min: 999999,
     max: 0
@@ -83,11 +83,11 @@ function calculateTagParams(tags) {
     params.min = Math.min(tags[tag], params.min);
   }
   return params;
-}
-let optCloudClassCount = 5;
-let optCloudClassPrefix = "tag-size-";
+};
+const optCloudClassCount = 5;
+const optCloudClassPrefix = "tag-size-";
 
-function calculateTagClass(count, params) {
+const calculateTagClass = (count, params) => {
   const classNumber = Math.floor(
     ((count - params.min) / (params.max - params.min)) * optCloudClassCount + 1
   );
@@ -98,9 +98,9 @@ function calculateTagClass(count, params) {
   } else {
     return "small";
   }
-}
+};
 
-function generateTags() {
+const generateTags = () => {
   let allTags = {};
   const articles = document.querySelectorAll(".post");
   for (let article of articles) {
@@ -128,17 +128,20 @@ function generateTags() {
     tagsWrapper.innerHTML = templates.tagsPost(allTagsData);
     tagList.innerHTML = templates.dataCloud(allTagsData);
   }
-}
+};
 
 generateTags();
 
 const tags = document.querySelectorAll(
   ".list.tags > li > a, .list.list-horizontal > li > a "
 );
-for (let tag of tags) {
-  tag.addEventListener("click", event => {
-    generateTitleLinks("[data-tags~='" + event.target.innerText + "']");
-    document.querySelector("button").classList.remove("button--hide");
-    event.preventDefault();
-  });
-}
+const sortByTags = tags => {
+  for (let tag of tags) {
+    tag.addEventListener("click", event => {
+      generateTitleLinks("[data-tags~='" + event.target.innerText + "']");
+      document.querySelector("button").classList.remove("button--hide");
+      event.preventDefault();
+    });
+  }
+};
+sortByTags(tags);
